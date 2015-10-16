@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>SODA | 大规模人群预测、检测和疏散</title>
+    <meta name="description" content="" />
+    <meta name="keywords" content="" />
+    <meta name="author" content="" />
+    <link rel="shortcut icon" href="{{url_for('static',filename='img/logo.png')}}">
+    <script src="http://cdn.bootcss.com/jquery/2.1.4/jquery.min.js"></script>
+    <link href="http://cdn.bootcss.com/bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet" />
+    <script src="http://cdn.bootcss.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js" charset="utf-8"></script>
+    <link href="//netdna.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href='http://www.youziku.com/webfont/CSS/40f59865086d497893abe5ab83513f70' rel='stylesheet' type='text/css' />
+    <script src="{{url_for('static',filename='js/ECharts/echarts.js')}}"></script>
+    <script src="{{url_for('static',filename='js/ECharts/echarts-dark.js')}}"></script>
+    <script src="{{url_for('static',filename='js/d3.layout.cloud.js')}}"></script>
+    {% block style %} {% endblock %}
+    <style>
+    body {
+        font-family: Microsoft Yahei;
+        background-color: #1b1b1b;
+    }
+    
+    #header {
+        background-color: #0E1018;
+        padding: 20px 40px;
+        position: relative;
+        border-bottom: 1px solid rgba(220, 220, 220, 0.2);
+        font-family: ruibo488611;
+    }
+    
+    #header #nav {
+        position: absolute;
+        right: 60px;
+        top: 18px;
+        font-size: 15px;
+    }
+    
+    #header #nav a {
+        text-decoration: none;
+        display: inline-block;
+        color: #888;
+        padding: 5px 10px;
+        border-radius: 5px;
+        margin-right: 0px;
+        cursor: pointer;
+        transition: color .3s;
+        -o-transition: color .3s;
+        -ms-transition: color .3s;
+        -moz-transition: color .3s;
+        -webkit-transition: color .3s;
+    }
+    
+    #header #nav a.active {
+        color: #eee;
+    }
+    
+    #header h1 {
+        color: #eee;
+        margin-bottom: 30px;
+        font-size: 20px;
+        display: inline-block;
+        margin-top: 0;
+        margin-bottom: 0;
+    }
+    
+    #header p {
+        color: #eee;
+        font-size: 20px;
+        margin-right: 200px;
+        margin-left: 25px;
+        display: inline-block;
+        margin-top: 0;
+        margin-bottom: 0;
+    }
+    
+    #footer {
+        text-align: center;
+        color: white;
+        background-color: #0E1018;
+        padding: 30px;
+        font-size: 15px;
+    }
+    
+    #footer p {
+        margin-bottom: 0;
+        color: #eee;
+    }
+    
+    #footer a {
+        text-decoration: none;
+        color: #999;
+        margin-left: 2px;
+        margin-right: 2px;
+        transition: color .3s;
+        -o-transition: color .3s;
+        -ms-transition: color .3s;
+        -moz-transition: color .3s;
+        -webkit-transition: color .3s;
+    }
+    
+    #footer p a:hover {
+        color: #fff;
+    }
+    
+    .plot-title {
+        padding: 5px 10px;
+        font-size: 12px;
+        background-color: #9E2222;
+        z-index: 999;
+        color: #f2f2f2;
+        width: 100%;
+        text-align: left;
+        margin-bottom: 0;
+        box-shadow: 0px 3px 5px rgba(20, 20, 20, 0.4);
+    }
+    
+    .BMap_cpyCtrl,
+    .anchorBL {
+        display: none;
+    }
+    </style>
+    <script>
+    // 加载echarts
+    require.config({
+        paths: {
+            echarts: "{{url_for('static',filename='js/ECharts')}}"
+        },
+        packages: [{
+            name: 'BMap',
+            location: "{{url_for('static',filename='js/BMap')}}",
+            main: 'main'
+        }]
+    });
+    </script>
+</head>
+
+<body>
+    <div id="header">
+        <h1>SODA</h1>
+        <p>大规模人群预测、检测和疏散</p>
+        <div id="nav">
+            <a href="{{url_for('macro')}}" id="nav1">
+                宏观分析
+            </a>
+            <a href="{{url_for('micro')}}" id="nav2">
+                微观分析
+            </a>
+            <a href="{{url_for('mecro')}}" id="nav3">
+                介观分析
+            </a>
+        </div>
+    </div>
+    <div id="main">
+        {% block body %} {% endblock %}
+    </div>
+    <div id="footer">
+        <p>Copyright © 2015 <a href="http://zhanghonglun.cn" target="_blank">沉默的忘了爱</a>. All Rights Reserved.</p>
+    </div>
+</body>
+
+</html>

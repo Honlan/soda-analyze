@@ -1,0 +1,27 @@
+{% extends 'layout.html' %} {% block style %}
+<style>
+
+</style>
+{% endblock %} {% block body %}
+<script>
+$(document).ready(function() {
+    $('#header #nav #nav2').addClass('active');
+
+    $('#header #nav a').mouseenter(function() {
+        $('#header #nav a').removeClass('active');
+        $(this).addClass('active');
+    });
+    $('#header #nav').mouseleave(function() {
+        $('#header #nav a').removeClass('active');
+        $('#header #nav #nav2').addClass('active');
+    });
+});
+</script>
+<div id="micro">
+    micro
+</div>
+<script>
+$(document).ready(function() {
+  
+</script>
+{% endblock %}

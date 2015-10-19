@@ -109,11 +109,11 @@ $(document).ready(function() {
 });
 </script>
 <div id="macro">
-    <div class="row">
+    <div class="row" style="padding-left:15px;padding-right:15px;">
         <p class="plot-title">地铁站点客流统计</p>
         <div id="line"></div>
     </div>
-    <div class="row" style="position:relative;">
+    <div class="row" style="position:relative;padding-left:15px;padding-right:15px;">
         <p class="plot-title">地铁站点OD分析</p>
         <p id="info">从<span></span>出发的客流去往</p>
         <div id="wordcloud">
@@ -123,12 +123,12 @@ $(document).ready(function() {
         </div>
     </div>
     <div class="row">
-        <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5" style="padding-left:0;">
+        <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5">
             <p class="plot-title">地铁线路OD分析</p>
             <div id="od">
             </div>
         </div>
-        <div class="col-xs-7 col-sm-7 col-md-7 col-lg-7" style="padding-right:0;position:relative;">
+        <div class="col-xs-7 col-sm-7 col-md-7 col-lg-7" style="position:relative;">
             <p class="plot-title">地铁站点客流热力图</p>
             <div id="mapButtons">
                 <span id="mapButton1">出度</span>
@@ -3779,7 +3779,7 @@ $(document).ready(function($) {
     map.addOverlay(heatmapOverlay);
     heatmapOverlay.setDataSet({
         data: station_weight,
-        max: max_weight * 0.7
+        max: max_weight * 0.6
     });
 
     $('#mapButton1').click(function(event) {
@@ -3787,7 +3787,7 @@ $(document).ready(function($) {
         $(this).addClass('active');
         heatmapOverlay.setDataSet({
             data: from_this_station,
-            max: max_from * 0.7
+            max: max_from * 0.6
         });
     });
     $('#mapButton2').click(function(event) {
@@ -3795,7 +3795,7 @@ $(document).ready(function($) {
         $(this).addClass('active');
         heatmapOverlay.setDataSet({
             data: to_this_station,
-            max: max_to * 0.7
+            max: max_to * 0.6
         });
     });
     $('#mapButton3').click(function(event) {
@@ -3803,7 +3803,7 @@ $(document).ready(function($) {
         $(this).addClass('active');
         heatmapOverlay.setDataSet({
             data: station_weight,
-            max: max_weight * 0.7
+            max: max_weight * 0.6
         });
     });
 

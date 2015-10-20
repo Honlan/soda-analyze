@@ -418,16 +418,7 @@ $(document).ready(function() {
                 },
                 tooltip: {
                     trigger: 'item',
-                    formatter: function(params) {
-                        var $p = $('#micro .motif .motif-title[name="' + params.name + '"]');
-                        var motif = $p.siblings('svg');
-                        motif = motif.attr('id');
-                        new Vivus(motif, {
-                            type: 'oneByOne',
-                            duration: 100,
-                        }).reset().play();
-                        return params[0] + "<br/>" + params[1] + " : " + params[2] + "(" + params[3] + "%)";
-                    }
+                    formatter: "{a} <br/>{b} : {c} ({d}%)"
                 },
                 calculable: true,
                 series: [{

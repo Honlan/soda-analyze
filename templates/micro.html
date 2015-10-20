@@ -35,9 +35,7 @@
 }
 
 #micro #motifStat {
-    height: 380px;
-    background-color: #222 !important;
-    margin-top: 20px;
+    height: 400px;
 }
 
 #micro #stationNum {
@@ -390,7 +388,9 @@ $(document).ready(function() {
         duration: 200,
     });
     var motifs = ['单程型', '往返型', '三角型', '双路单程型', '三点单程型', '三点截断型', '三点往返型', '四点单程型', '四点截断型1', '四点截断型2'];
-    d3.selectAll('div.motif').data(motifs).append('p').style('opacity', 0).attr('class', 'motif-title').text(function(d, i) {
+    d3.selectAll('div.motif').data(motifs).append('p').style('opacity', 0).attr('class', 'motif-title').attr('name', function(d, i) {
+        return d;
+    }).text(function(d, i) {
         return d;
     }).transition().delay(function(d, i) {
         return 300 * (i + 1);
@@ -400,9 +400,77 @@ $(document).ready(function() {
         motif = motif.attr('id');
         new Vivus(motif, {
             type: 'oneByOne',
-            duration: 200,
+            duration: 100,
         }).reset().play();
     }, function() {});
+
+    // motifs统计
+    require(
+        [
+            'echarts',
+            'echarts/chart/pie',
+        ],
+        function(ec) {
+            var motifStat = ec.init(document.getElementById('motifStat'), theme);
+            option = {
+                title: {
+                    show: false
+                },
+                tooltip: {
+                    trigger: 'item',
+                    formatter: function(params) {
+                        var $p = $('#micro .motif .motif-title[name="' + params.name + '"]');
+                        var motif = $p.siblings('svg');
+                        motif = motif.attr('id');
+                        new Vivus(motif, {
+                            type: 'oneByOne',
+                            duration: 100,
+                        }).reset().play();
+                        return params[0] + "<br/>" + params[1] + " : " + params[2] + "(" + params[3] + "%)";
+                    }
+                },
+                calculable: true,
+                series: [{
+                    name: '用户Motifs统计',
+                    type: 'pie',
+                    radius: '60%',
+                    center: ['50%', '50%'],
+                    roseType: 'area',
+                    data: [{
+                        value: 24039449,
+                        name: '单程型'
+                    }, {
+                        value: 23098516,
+                        name: '往返型'
+                    }, {
+                        value: 7373835,
+                        name: '三角型'
+                    }, {
+                        value: 3551398,
+                        name: '双路单程型'
+                    }, {
+                        value: 1907823,
+                        name: '三点单程型'
+                    }, {
+                        value: 1794333,
+                        name: '三点截断型'
+                    }, {
+                        value: 885152,
+                        name: '四点截断型2'
+                    }, {
+                        value: 406756,
+                        name: '四点截断型1'
+                    }, {
+                        value: 396729,
+                        name: '四点单程型'
+                    }, {
+                        value: 342067,
+                        name: '三点往返型'
+                    }]
+                }]
+            };
+            motifStat.setOption(option);
+        });
 
     // 用户站点数量统计
     require(

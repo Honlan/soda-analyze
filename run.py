@@ -36,5 +36,15 @@ def micro():
 def mecro():
 	return render_template('mecro.html')
 
+@app.route('/traffic', methods=['POST'])
+def traffic():
+	data = request.form
+	name = data['name']
+	(db, cursor) = connectdb()
+	cursor.execute('select * from subway_traffic where name=%s order by date asc', [name])
+	traffic = cursor.fetchall()
+	closedb(db, cursor)
+	return json.dumps({"traffic": traffic})
+
 if __name__ == '__main__':
 	app.run(debug=True)

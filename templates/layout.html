@@ -5,7 +5,7 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>SODA | 大规模人群预测、检测和疏散</title>
+    <title>SODA | 大规模人群的识别和疏散</title>
     <meta name="description" content="" />
     <meta name="keywords" content="" />
     <meta name="author" content="" />
@@ -15,7 +15,7 @@
     <script src="http://cdn.bootcss.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js" charset="utf-8"></script>
     <link href="//netdna.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
-    <link href='http://www.youziku.com/webfont/CSS/40f59865086d497893abe5ab83513f70' rel='stylesheet' type='text/css' />
+    <link href='http://www.youziku.com/webfont/CSS/f3655d77955f9cd271e751934223daec' rel='stylesheet' type='text/css' />
     <script src="{{url_for('static',filename='js/ECharts/echarts.js')}}"></script>
     <script src="{{url_for('static',filename='js/ECharts/echarts-dark.js')}}"></script>
     <script src="{{url_for('static',filename='js/vivus.js')}}"></script>
@@ -31,7 +31,7 @@
         padding: 20px 40px;
         position: relative;
         border-bottom: 1px solid rgba(220, 220, 220, 0.2);
-        font-family: ruibo488611;
+        font-family: ruibo494522;
     }
     
     #header #nav {
@@ -143,16 +143,19 @@
 <body>
     <div id="header">
         <h1>SODA</h1>
-        <p>大规模人群预测、检测和疏散</p>
+        <p>大规模人群的识别和疏散</p>
         <div id="nav">
             <a href="{{url_for('macro')}}" id="nav1">
-                宏观分析
+                宏观
             </a>
             <a href="{{url_for('micro')}}" id="nav2">
-                微观分析
+                微观
             </a>
             <a href="{{url_for('mecro')}}" id="nav3">
-                介观分析
+                介观
+            </a>
+            <a href="{{url_for('mecro')}}" id="nav4">
+                疏散
             </a>
         </div>
     </div>

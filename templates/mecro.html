@@ -449,7 +449,8 @@ $(document).ready(function($) {
     };
 
     // 出租车实时热力图
-    var taxis = {{taxi|safe}};
+    var taxis = "{{taxi}}";
+    taxis = taxis.split(';');
     var map = new BMap.Map("event"); // 创建地图实例
     map.centerAndZoom(new BMap.Point(121.48, 31.22), 11); // 初始化地图，设置中心点坐标和地图级别
     map.enableScrollWheelZoom(); // 允许滚轮缩放
@@ -460,7 +461,7 @@ $(document).ready(function($) {
     var taxiResult = [];
     var taxiMax = 0;
     for (var i = 0; i < taxis.length; i++) {
-        var tmp = taxis[i]['taxi'];
+        var tmp = taxis[i];
         tmp = tmp.split(' ');
         var point = [];
         var count = 0;

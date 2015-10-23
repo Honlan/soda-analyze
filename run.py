@@ -37,7 +37,10 @@ def mecro():
 	(db, cursor) = connectdb()
 	cursor.execute('select * from taxi order by timezone asc')
 	taxi = cursor.fetchall()
-	taxi = json.dumps(taxi)
+	tmp = ''
+	for item in taxi:
+		tmp = tmp + item['taxi'] + ';'
+	taxi = tmp[:-1]
 	return render_template('mecro.html', taxi=taxi)
 
 @app.route('/evacuate')

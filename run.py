@@ -34,7 +34,11 @@ def micro():
 
 @app.route('/mecro')
 def mecro():
-	return render_template('mecro.html')
+	(db, cursor) = connectdb()
+	cursor.execute('select * from taxi order by timezone asc')
+	taxi = cursor.fetchall()
+	taxi = json.dumps(taxi)
+	return render_template('mecro.html', taxi=taxi)
 
 @app.route('/evacuate')
 def evacuate():

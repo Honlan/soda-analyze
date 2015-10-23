@@ -101,6 +101,25 @@
 #mecro #detail #compare {
     height: 600px;
 }
+
+#mecro #timezone {
+    position: absolute;
+    top: 55px;
+    z-index: 999;
+    width: 1000px;
+    right: 50%;
+    margin-right: -500px;
+    text-align: right;
+    padding-right: 20px;
+    font-size: 20px;
+}
+
+#mecro #event {
+    width: 1000px;
+    height: 500px;
+    margin: 0 auto;
+    margin-top: 40px;
+}
 </style>
 {% endblock %} {% block body %}
 <script>
@@ -119,6 +138,8 @@ $(document).ready(function() {
 </script>
 <script src="{{url_for('static',filename='js/d3/d3.js')}}"></script>
 <script src="{{url_for('static',filename='js/d3/d3.layout.js')}}"></script>
+<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=gW3cQ4s09L4KYCnxh7VKf26P"></script>
+<script type="text/javascript" src="http://api.map.baidu.com/library/Heatmap/2.0/src/Heatmap_min.js"></script>
 <div id="mecro">
     <div class="row" style="overflow:hidden;">
         <div id="treemap">
@@ -145,7 +166,8 @@ $(document).ready(function() {
             </div>
         </div>
     </div>
-    <div class="row">
+    <div class="row" style="position:relative;">
+        <p id="timezone"></p>
         <div id="event">
         </div>
     </div>
@@ -274,7 +296,6 @@ $(document).ready(function($) {
                 return Math.abs(d.dy - 1);
             })
             .style("fill", function(d) {
-                // return color(d.parent.name);
                 return color[d.parent.name];
             }).attr("stroke", "none");
 
@@ -392,7 +413,6 @@ $(document).ready(function($) {
             });
     });
 
-
     var compareOption = {
         title: {
             show: false
@@ -427,6 +447,60 @@ $(document).ready(function($) {
             symbol: 'none'
         }]
     };
+
+    // 出租车实时热力图
+    var taxis = {{taxi|safe}};
+    var map = new BMap.Map("event"); // 创建地图实例
+    map.centerAndZoom(new BMap.Point(121.48, 31.22), 11); // 初始化地图，设置中心点坐标和地图级别
+    map.enableScrollWheelZoom(); // 允许滚轮缩放
+    map.addControl(new BMap.NavigationControl());
+    map.setMapStyle({
+        style: 'grayscale'
+    });
+    var taxiResult = [];
+    var taxiMax = 0;
+    for (var i = 0; i < taxis.length; i++) {
+        var tmp = taxis[i]['taxi'];
+        tmp = tmp.split(' ');
+        var point = [];
+        var count = 0;
+        var error = 0.01;
+        for (var j = 0; j < tmp.length; j++) {
+            tmp[j] = tmp[j].split(',');
+            if (parseInt(tmp[j][2]) > taxiMax) {
+                taxiMax = parseInt(tmp[j][2]);
+            }
+            count = count + parseInt(tmp[j][2]);
+            point.push({
+                'lng': parseFloat(tmp[j][0]) + (Math.random() - 0.5) * error,
+                'lat': parseFloat(tmp[j][1]) + (Math.random() - 0.5) * error,
+                'count': parseInt(tmp[j][2]) + (Math.random() - 0.5) * error
+            });
+        }
+        taxiResult.push(point);
+    }
+    var heatmapOverlay = new BMapLib.HeatmapOverlay({
+        "radius": 20
+    });
+    var timeIndex = 0;
+    var timeZone = ['00:00', '00:30', '01:00', '01:30', '02:00', '02:30', '03:00', '03:30', '04:00', '04:30', '05:00', '05:30', '06:00', '06:30', '07:00', '07:30', '08:00', '08:30', '09:00', '09:30', '10:00', '10:30', '11:00', '11:30', '12:00', '12:30', '13:00', '13:30', '14:00', '14:30', '15:00', '15:30', '16:00', '16:30', '17:00', '17:30', '18:00', '18:30', '19:00', '19:30', '20:00', '20:30', '21:00', '21:30', '22:00', '22:30', '23:00', '23:30'];
+    map.addOverlay(heatmapOverlay);
+    heatmapOverlay.setDataSet({
+        data: taxiResult[timeIndex],
+        max: taxiMax * 0.8
+    });
+    $('#mecro #timezone').text(timeZone[timeIndex]);
+
+    setInterval(function() {
+        timeIndex = (timeIndex + 1) % 48;
+        heatmapOverlay.setDataSet({
+            data: taxiResult[timeIndex],
+            max: taxiMax * 0.8
+        });
+        $('#mecro #timezone').text(timeZone[timeIndex]);
+
+    }, 500);
+
 });
 </script>
 {% endblock %}

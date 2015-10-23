@@ -36,6 +36,10 @@ def micro():
 def mecro():
 	return render_template('mecro.html')
 
+@app.route('/evacuate')
+def evacuate():
+	return render_template('evacuate.html')
+
 @app.route('/traffic', methods=['POST'])
 def traffic():
 	data = request.form

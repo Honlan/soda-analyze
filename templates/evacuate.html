@@ -1,0 +1,235 @@
+{% extends 'layout.html' %} {% block style %}
+<style>
+#evacuate {
+    padding: 50px 80px;
+}
+
+#evacuate #result {
+    height: 500px;
+}
+
+#evacuate #control {
+    text-align: center;
+    color: #ddd;
+}
+
+#evacuate #control h1 {
+    font-size: 20px;
+}
+
+#evacuate #control p {
+    font-size: 16px;
+}
+
+#evacuate #control #busNum p,
+#busVol p {
+    margin-bottom: 5px;
+    margin-top: 15px;
+}
+
+#evacuate #control p span {
+    color: red;
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+#evacuate #control #buses {
+    text-align: left;
+}
+
+#evacuate #control #buses i {
+    position: relative;
+    display: inline-block;
+    margin-bottom: 10px;
+}
+</style>
+{% endblock %} {% block body %}
+<script>
+$(document).ready(function() {
+    $('#header #nav #nav4').addClass('active');
+
+    $('#header #nav a').mouseenter(function() {
+        $('#header #nav a').removeClass('active');
+        $(this).addClass('active');
+    });
+    $('#header #nav').mouseleave(function() {
+        $('#header #nav a').removeClass('active');
+        $('#header #nav #nav4').addClass('active');
+    });
+});
+</script>
+<div id="evacuate">
+    <div class="row">
+        <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8">
+            <div id="result"></div>
+        </div>
+        <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+            <div id="control">
+                <h1>虹口足球场4月11日晚</h1>
+                <p style="color:#999;margin-bottom:20px;">疏散模型演示</p>
+                <div id="busNum">
+                    <p>巴士数<span>10</span>辆</p>
+                    <input type="range" min="10" max="100" step="1" value="10" />
+                </div>
+                <div id="busVol">
+                    <p>载客量<span>20</span>人</p>
+                    <input type="range" min="20" max="40" step="5" value="20" />
+                </div>
+                <p style="margin-top:20px;text-align:left;">每辆车成本为<span id="cost">200</span>元，票价为<span id="ticket">10</span>元，实际巴士疏散人数为<span id="total">200</span>人, 可盈利<span id="benefit">0</span>元</p>
+                <p style="margin-top:20px;">采取措施前，历时<span>118</span>分钟完成疏散</p>
+                <p>采取措施后，历时<span id="duration">116</span>分钟完成疏散</p>
+                <div id="buses" style="margin-top:30px;"></div>
+            </div>
+        </div>
+    </div>
+    <script>
+    $(document).ready(function($) {
+        var baseline = [8381, 8312, 8259, 8195, 8138, 8088, 8042, 7987, 7942, 7889, 7841, 7798, 7758, 7712, 7670, 7628, 7591, 7526, 7468, 7408, 7359, 7288, 7220, 7154, 7071, 6983, 6824, 6632, 6416, 6146, 5878, 5549, 5201, 4847, 4491, 4179, 3906, 3553, 3232, 2923, 2636, 2371, 2133, 1910, 1744, 1634, 1529, 1435, 1336, 1241, 1172, 1119, 1060, 1013, 971, 911, 874, 841, 802, 760, 740, 698, 671, 626, 588, 555, 495, 466, 431, 386, 364, 351, 329, 310, 291, 287, 276, 266, 257, 248, 239, 225, 212, 193, 183, 169, 157, 150, 140, 130, 123, 110, 100, 90, 84, 82, 78, 72, 64, 58, 57, 53, 48, 46, 43, 39, 39, 34, 34, 30, 29, 27, 24, 22, 11, 6, 2, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+        var busNum = 10;
+        var busVol = 20;
+        var tmp = parseInt(busNum / 10);
+        var busData = [];
+        for (var i = 0; i < tmp; i++) {
+            busData.push(i);
+        }
+        d3.select('#buses').selectAll('i').data(busData, function(d){return d;}).enter().append('i').attr("class", "fa fa-fw fa-bus").style('font-size', (busVol + 10) + 'px');
+        var velocity = 60;
+        var total = 0;
+        var evacNum = evacuation(baseline, busNum, busVol, velocity);
+        var evacuateOption = {
+            title: {
+                show: false
+            },
+            tooltip: {
+                trigger: 'axis',
+            },
+            legend: {
+                data: ['未采取措施', '采取疏散措施']
+            },
+            calculable: true,
+            xAxis: [{
+                type: 'category',
+                boundaryGap: false,
+                data: ['21:15', '21:16', '21:17', '21:18', '21:19', '21:20', '21:21', '21:22', '21:23', '21:24', '21:25', '21:26', '21:27', '21:28', '21:29', '21:30', '21:31', '21:32', '21:33', '21:34', '21:35', '21:36', '21:37', '21:38', '21:39', '21:40', '21:41', '21:42', '21:43', '21:44', '21:45', '21:46', '21:47', '21:48', '21:49', '21:50', '21:51', '21:52', '21:53', '21:54', '21:55', '21:56', '21:57', '21:58', '21:59', '22:00', '22:01', '22:02', '22:03', '22:04', '22:05', '22:06', '22:07', '22:08', '22:09', '22:10', '22:11', '22:12', '22:13', '22:14', '22:15', '22:16', '22:17', '22:18', '22:19', '22:20', '22:21', '22:22', '22:23', '22:24', '22:25', '22:26', '22:27', '22:28', '22:29', '22:30', '22:31', '22:32', '22:33', '22:34', '22:35', '22:36', '22:37', '22:38', '22:39', '22:40', '22:41', '22:42', '22:43', '22:44', '22:45', '22:46', '22:47', '22:48', '22:49', '22:50', '22:51', '22:52', '22:53', '22:54', '22:55', '22:56', '22:57', '22:58', '22:59', '23:00', '23:01', '23:02', '23:03', '23:04', '23:05', '23:06', '23:07', '23:08', '23:09', '23:10', '23:11', '23:12', '23:13', '23:14', '23:15', '23:16', '23:17', '23:18', '23:19', '23:20', '23:21', '23:22', '23:23', '23:24', '23:25', '23:26', '23:27', '23:28', '23:29']
+            }],
+            yAxis: [{
+                type: 'value',
+                scale: true
+            }],
+            series: [{
+                name: '未采取措施',
+                type: 'line',
+                data: baseline,
+                smooth: true,
+                symbol: 'none',
+            }, {
+                name: '采取疏散措施',
+                type: 'line',
+                data: evacNum,
+                smooth: true,
+                symbol: 'none',
+            }]
+        };
+        require(
+            [
+                'echarts',
+                'echarts/chart/line',
+            ],
+            function(ec) {
+                var result = ec.init(document.getElementById('result'), theme);
+                result.setOption(evacuateOption);
+            });
+
+        function evacuation(accNum, busNum, volumn, vel) {
+            var total_vol = busNum * volumn;
+            var total_evac = 0;
+            var evacNum = [];
+            var minus = 0;
+            evacNum.push(accNum[0]);
+            var lambda = 0.8;
+            for (var i = 1; i < accNum.length; i++) {
+                if (total_vol > 0) {
+                    if (total_vol < vel) {
+                        minus = total_vol;
+                        total_evac = total_evac + total_vol;
+                        total_vol = 0;
+                    } else {
+                        minus = vel;
+                        total_evac = total_evac + vel;
+                        total_vol = total_vol - vel;
+                    }
+                    total = total + minus;
+                    var ratio = parseFloat(accNum[i - 1] - accNum[i]) / parseFloat(accNum[i - 1]);
+                    var evacPoint = parseInt(evacNum[i - 1] - (evacNum[i - 1] * lambda + accNum[i - 1] * (1 - lambda)) * ratio - minus);
+
+                    if (evacPoint <= 0) {
+                        for (var j = i; j < accNum.length; j++) {
+                            evacNum.push(0);
+                        }
+                        break;
+                    } else {
+                        evacNum.push(evacPoint);
+                    }
+                } else {
+                    var ratio = parseFloat(accNum[i - 1] - accNum[i]) / parseFloat(accNum[i - 1]);
+                    var evacPoint = parseInt(evacNum[i - 1] - (evacNum[i - 1] * lambda + accNum[i - 1] * (1 - lambda)) * ratio);
+                    if (evacPoint <= 0) {
+                        evacNum.push(0);
+                    } else {
+                        evacNum.push(evacPoint);
+                    }
+                }
+            }
+            return evacNum;
+        }
+
+        $('#evacuate #control input').change(function(event) {
+            var $input = $(this);
+            var $p = $input.siblings('p');
+            $p.children('span').text($input.val());
+
+            var busNum = parseInt($('#evacuate #control #busNum input').val());
+            var busVol = parseInt($('#evacuate #control #busVol input').val());
+            tmp = parseInt(busNum / 10);
+            busData = [];
+            for (var i = 0; i < tmp; i++) {
+                busData.push(i);
+            }
+            var busIcons = d3.select('#buses').selectAll('i').data(busData, function(d){return d;});
+            busIcons.transition().duration(300).style('font-size', (busVol + 10) + 'px');
+            busIcons.enter().append('i').transition().duration(300).attr("class", "fa fa-fw fa-bus").style('font-size', (busVol + 10) + 'px');
+            busIcons.exit().style("top","0px").style('opacity', '1').transition().duration(300).style("top","20px").style('opacity', '0').remove();
+
+            var ticket = parseInt($('#ticket').text());
+            var cost = 200 + (busVol - 20) * 5;
+            $('#cost').text(cost);
+
+            total = 0;
+
+            evacNum = evacuation(baseline, busNum, busVol, velocity);
+
+            $('#benefit').text(ticket * total - cost * busNum);
+            $('#total').text(total);
+
+            evacuateOption['series'][1]['data'] = evacNum;
+            var i = 0;
+            for (; i < evacNum.length; i++) {
+                if (evacNum[i] <= 0) {
+                    break;
+                }
+            }
+            $('#duration').text(i);
+            require(
+                [
+                    'echarts',
+                    'echarts/chart/line',
+                ],
+                function(ec) {
+                    var result = ec.init(document.getElementById('result'), theme);
+                    result.setOption(evacuateOption);
+                });
+        });
+
+    });
+    </script>
+    {% endblock %}
